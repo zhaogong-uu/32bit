@@ -1,0 +1,27 @@
+name: Build 32-bit EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          architecture: 'x86'
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+      - name: Build
+        run: pyinstaller --onefile userV1.1.py
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: 32bit-exe
+          path: dist/*.exe
